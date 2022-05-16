@@ -10659,7 +10659,7 @@ var COMMENT_SIGNATURE = sub("\u{1F916} This report was automatically generated b
   if (sizeReport) {
     await upsert_comment_default({
       token: GITHUB_TOKEN,
-      commentSignature: `${COMMENT_SIGNATURE}(options hash: ${import_crypto.default.createHash("md5").update(inputs).digest("hex")})`,
+      commentSignature: `${COMMENT_SIGNATURE}(options hash: ${import_crypto.default.createHash("md5").update(JSON.stringify(inputs)).digest("hex")})`,
       repo: import_github2.context.repo,
       prNumber: pr.number,
       body: sizeReport
