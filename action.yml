@@ -11,6 +11,8 @@ inputs:
     description: where the build should run  
   dist-directory:
     description: where the dist folder is
+  skip-npm-ci:
+    description: 'Skip npm ci'
   comment-report:
     description: 'Whether to comment the build size report on the PR or not: true, false'
   mode:
