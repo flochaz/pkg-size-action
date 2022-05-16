@@ -11,8 +11,10 @@ async function buildRef({
 	checkoutRef,
 	refData,
 	buildCommand,
+	workDirectory,
+	distDirectory,
 }) {
-	const cwd = process.cwd();
+	const cwd = process.cwd() + workDirectory;
 
 	log.info(`Current working directory: ${cwd}`);
 
@@ -46,27 +48,33 @@ async function buildRef({
 		}
 
 		if (buildCommand) {
-			await npmCi({ cwd }).catch((error) => {
+			await npmCi({ cwd: process.cwd() }).catch((error) => {
 				throw new Error(`Failed to install dependencies:\n${error.message}`);
 			});
 
 			log.info(`Running build command: ${buildCommand}`);
 			const buildStart = Date.now();
-			await exec(buildCommand, { cwd }).catch((error) => {
-				throw new Error(`Failed to run build command: ${buildCommand}\n${error.message}`);
+			const {
+				exitCode,
+				duration,
+				stdout,
+				stderr,
+			} = await exec(buildCommand, { cwd }).catch((error) => {
+				throw new Error(`Failed to run build command: ${buildCommand}\n\t\t Error:\n${error}\n#####`);
 			});
+			log.info(`Build command finished in ${duration}ms with exit code ${exitCode} and output:\n${stdout} \n\nand stderr: ${stderr}`);
 			log.info(`Build completed in ${(Date.now() - buildStart) / 1000}s`);
 		}
 	}
 
 	if (!pkgSizeInstalled) {
 		log.info('Installing pkg-size globally');
-		await exec('npm i -g pkg-size');
+		await exec('npm i -g pkg-size', { cwd: process.cwd() + distDirectory });
 		pkgSizeInstalled = true;
 	}
 
 	log.info('Getting package size');
-	const result = await exec('pkg-size --json', { cwd }).catch((error) => {
+	const result = await exec('pkg-size --json', { cwd: process.cwd() + distDirectory }).catch((error) => {
 		throw new Error(`Failed to determine package size: ${error.message}`);
 	});
 	log.debug(JSON.stringify(result, null, 4));

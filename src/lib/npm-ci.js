@@ -19,7 +19,7 @@ async function npmCi({ cwd } = {}) {
 
 	if (fs.existsSync('package-lock.json')) {
 		log.info('Installing dependencies with npm');
-		installCommand = 'npm ci';
+		installCommand = 'npm ci --foreground-scripts';
 	} else if (fs.existsSync('yarn.lock')) {
 		log.info('Installing dependencies with yarn');
 

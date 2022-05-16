@@ -7,6 +7,8 @@ import * as log from './log.js';
 async function generateSizeReport({
 	pr,
 	buildCommand,
+	workDirectory,
+	distDirectory,
 	commentReport,
 	mode,
 	unchangedFiles,
@@ -19,6 +21,8 @@ async function generateSizeReport({
 	const headPkgData = await buildRef({
 		refData: pr.head,
 		buildCommand,
+		workDirectory,
+		distDirectory,
 	});
 	setOutput('headPkgData', headPkgData);
 	log.endGroup();
@@ -45,6 +49,8 @@ async function generateSizeReport({
 			checkoutRef: baseRef,
 			refData: pr.base,
 			buildCommand,
+			workDirectory,
+			distDirectory,
 		});
 		log.endGroup();
 	} else {

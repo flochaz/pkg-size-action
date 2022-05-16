@@ -1,4 +1,4 @@
-name: 'pkg-size-action'
+name: 'pkg-size'
 description: 'Report npm package size on pull-requests'
 author: 'Hiroki Osame <hiroki.osame@gmail.com>'
 branding:
@@ -7,6 +7,10 @@ branding:
 inputs:
   build-command:
     description: 'Command to build the package with'
+  work-directory: 
+    description: where the build should run  
+  dist-directory:
+    description: where the dist folder is
   comment-report:
     description: 'Whether to comment the build size report on the PR or not: true, false'
   mode:

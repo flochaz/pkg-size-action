@@ -5,18 +5,24 @@ async function exec(command, options) {
 	let stderr = '';
 
 	const startTime = Date.now();
-	const exitCode = await _exec(command, null, {
-		...options,
-		silent: true,
-		listeners: {
-			stdout(data) {
-				stdout += data.toString();
+	let exitCode = '127';
+	try {
+		exitCode = await _exec(command, null, {
+			...options,
+			silent: true,
+			listeners: {
+				stdout(data) {
+					stdout += data.toString();
+				},
+				stderr(data) {
+					stderr += data.toString();
+				},
 			},
-			stderr(data) {
-				stderr += data.toString();
-			},
-		},
-	});
+		});
+	} catch (error) {
+		stderr += error.toString();
+	}
+
 	const duration = Date.now() - startTime;
 
 	return {

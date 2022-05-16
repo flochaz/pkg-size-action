@@ -22,7 +22,7 @@
 		"dist"
 	],
 	"scripts": {
-		"build": "rollup -c && :",
+		"build": "npx esbuild --bundle 'src/index.js' --target=node14 --platform=node --outfile='dist/index.js'",
 		"lint": "eslint ."
 	},
 	"husky": {
