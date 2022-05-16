@@ -7,12 +7,14 @@ import { c, link } from './markdown.js';
 
 let pkgSizeInstalled = false;
 
+// eslint-disable-next-line complexity
 async function buildRef({
 	checkoutRef,
 	refData,
 	buildCommand,
 	workDirectory,
 	distDirectory,
+	skipNpmCi,
 }) {
 	const cwd = process.cwd() + workDirectory;
 
@@ -48,9 +50,11 @@ async function buildRef({
 		}
 
 		if (buildCommand) {
-			await npmCi({ cwd: process.cwd() }).catch((error) => {
-				throw new Error(`Failed to install dependencies:\n${error.message}`);
-			});
+			if (!skipNpmCi) {
+				await npmCi({ cwd: process.cwd() }).catch((error) => {
+					throw new Error(`Failed to install dependencies:\n${error.message}`);
+				});
+			}
 
 			log.info(`Running build command: ${buildCommand}`);
 			const buildStart = Date.now();

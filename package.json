@@ -22,7 +22,7 @@
 		"dist"
 	],
 	"scripts": {
-		"build": "npx esbuild --bundle 'src/index.js' --target=node14 --platform=node --outfile='dist/index.js'",
+		"build": "npx esbuild --bundle 'src/index.js' --target=node14 --platform=node --outdir='dist'",
 		"lint": "eslint ."
 	},
 	"husky": {

@@ -10479,7 +10479,8 @@ async function buildRef({
   refData,
   buildCommand,
   workDirectory,
-  distDirectory
+  distDirectory,
+  skipNpmCi
 }) {
   const cwd = process.cwd() + workDirectory;
   import_core.info(`Current working directory: ${cwd}`);
@@ -10501,10 +10502,12 @@ async function buildRef({
       }
     }
     if (buildCommand) {
-      await npm_ci_default({ cwd: process.cwd() }).catch((error) => {
-        throw new Error(`Failed to install dependencies:
+      if (!skipNpmCi) {
+        await npm_ci_default({ cwd: process.cwd() }).catch((error) => {
+          throw new Error(`Failed to install dependencies:
 ${error.message}`);
-      });
+        });
+      }
       import_core.info(`Running build command: ${buildCommand}`);
       const buildStart = Date.now();
       const {
@@ -10563,6 +10566,7 @@ async function generateSizeReport({
   buildCommand,
   workDirectory,
   distDirectory,
+  skipNpmCi,
   commentReport,
   mode,
   unchangedFiles,
@@ -10576,7 +10580,8 @@ async function generateSizeReport({
     refData: pr.head,
     buildCommand,
     workDirectory,
-    distDirectory
+    distDirectory,
+    skipNpmCi
   });
   (0, import_core3.setOutput)("headPkgData", headPkgData);
   import_core.endGroup();
@@ -10602,7 +10607,8 @@ async function generateSizeReport({
       refData: pr.base,
       buildCommand,
       workDirectory,
-      distDirectory
+      distDirectory,
+      skipNpmCi
     });
     import_core.endGroup();
   } else {
@@ -10638,6 +10644,7 @@ var COMMENT_SIGNATURE = sub("\u{1F916} This report was automatically generated b
     buildCommand: (0, import_core4.getInput)("build-command"),
     workDirectory: (0, import_core4.getInput)("work-directory"),
     distDirectory: (0, import_core4.getInput)("dist-directory"),
+    skipNpmCi: (0, import_core4.getInput)("skip-npm-ci"),
     commentReport: (0, import_core4.getInput)("comment-report"),
     mode: (0, import_core4.getInput)("mode") || "regression",
     unchangedFiles: (0, import_core4.getInput)("unchanged-files") || "collapse",

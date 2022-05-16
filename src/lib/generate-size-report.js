@@ -9,6 +9,7 @@ async function generateSizeReport({
 	buildCommand,
 	workDirectory,
 	distDirectory,
+	skipNpmCi,
 	commentReport,
 	mode,
 	unchangedFiles,
@@ -23,6 +24,7 @@ async function generateSizeReport({
 		buildCommand,
 		workDirectory,
 		distDirectory,
+		skipNpmCi,
 	});
 	setOutput('headPkgData', headPkgData);
 	log.endGroup();
@@ -51,6 +53,7 @@ async function generateSizeReport({
 			buildCommand,
 			workDirectory,
 			distDirectory,
+			skipNpmCi,
 		});
 		log.endGroup();
 	} else {
