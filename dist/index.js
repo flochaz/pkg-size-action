@@ -10521,7 +10521,7 @@ ${error.message}`);
           duration,
           stdout,
           stderr
-        } = await exec_default(commandsToRun[index], { cwd }).catch((error) => {
+        } = await exec_default("bash", ["-c", commandsToRun[index]], { cwd }).catch((error) => {
           throw new Error(`Failed to run build command: ${buildCommand}
 		 Error:
 ${error}
