@@ -96,7 +96,7 @@ function generateComment({
 			align: ['', 'r'],
 		});
 
-		unchangedTable = `<details><summary>Unchanged files</summary>\n\n${unchangedTable}\n</details>`;
+		unchangedTable = `<summary>Unchanged files</summary>\n\n${unchangedTable}\n`;
 	}
 
 	let hiddenTable = '';
@@ -119,7 +119,7 @@ function generateComment({
 			align: ['', 'r', 'r'],
 		});
 
-		hiddenTable = `<details><summary>Hidden files</summary>\n\n${hiddenTable}\n</details>`;
+		hiddenTable = `<summary>Hidden files</summary>\n\n${hiddenTable}\n`;
 	}
 
 	return outdent`

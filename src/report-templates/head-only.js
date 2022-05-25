@@ -54,7 +54,7 @@ function headOnly({
 			align: ['', 'r'],
 		});
 
-		hiddenTable = `<details><summary>Hidden files</summary>\n\n${hiddenTable}\n</details>`;
+		hiddenTable = `<summary>Hidden files</summary>\n\n${hiddenTable}\n`;
 	}
 
 	return outdent`

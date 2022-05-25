@@ -10292,10 +10292,10 @@ function generateComment({
     ], {
       align: ["", "r"]
     });
-    unchangedTable = `<details><summary>Unchanged files</summary>
+    unchangedTable = `<summary>Unchanged files</summary>
 
 ${unchangedTable}
-</details>`;
+`;
   }
   let hiddenTable = "";
   if (hidden.length > 0) {
@@ -10309,10 +10309,10 @@ ${unchangedTable}
     ], {
       align: ["", "r", "r"]
     });
-    hiddenTable = `<details><summary>Hidden files</summary>
+    hiddenTable = `<summary>Hidden files</summary>
 
 ${hiddenTable}
-</details>`;
+`;
   }
   return import_outdent.default`
 	### 📊 Package size report&nbsp;&nbsp;&nbsp;<kbd>${formatDelta(regressionData.diff.size) || "No changes"}</kbd>
@@ -10369,10 +10369,10 @@ function headOnly({
     ], {
       align: ["", "r"]
     });
-    hiddenTable = `<details><summary>Hidden files</summary>
+    hiddenTable = `<summary>Hidden files</summary>
 
 ${hiddenTable}
-</details>`;
+`;
   }
   return import_outdent2.default`
 	### 📊 Package size report
