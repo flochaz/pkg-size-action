@@ -64,14 +64,18 @@ async function buildRef({
 			for (let index = 0; index < commandArrayLength; index += 1) {
 				log.info(`Running command ${commandsToRun[index]}`);
 				const {
-					exitCode,
-					duration,
-					stdout,
-					stderr,
-				} = await exec(commandsToRun[index], { cwd }).catch((error) => {
-					throw new Error(`Failed to run build command: ${buildCommand}\n\t\t Error:\n${error}\n#####`);
+					exitCode, duration, stdout, stderr,
+				} = await exec(
+					commandsToRun[index],
+					{ cwd },
+				).catch((error) => {
+					throw new Error(
+						`Failed to run build command: ${buildCommand}\n\t\t Error:\n${error}\n#####`,
+					);
 				});
-				log.info(`Build command finished in ${duration}ms with exit code ${exitCode} and output:\n${stdout} \n\nand stderr: ${stderr}`);
+				log.info(
+					`Build command finished in ${duration}ms with exit code ${exitCode} and output:\n${stdout} \n\nand stderr: ${stderr}`,
+				);
 				log.info(`Build completed in ${(Date.now() - buildStart) / 1000}s`);
 			}
 		}
@@ -79,13 +83,25 @@ async function buildRef({
 
 	if (!pkgSizeInstalled) {
 		log.info('Installing pkg-size globally');
-		await exec('npm i -g pkg-size', { cwd: process.cwd() + distDirectory });
+
+		const result = await exec('npm i -g pkg-size', {
+			cwd: process.cwd() + distDirectory,
+		}).catch((error) => {
+			throw new Error(`Failed to install  pkg-size: ${error.message}`);
+		});
+		log.info(JSON.stringify(result, null, 4));
 		pkgSizeInstalled = true;
 	}
 
-	log.info(`Getting package size running pkg-size --json in ${process.cwd() + distDirectory}`);
+	log.info(
+		`Getting package size running pkg-size --json in ${
+			process.cwd() + distDirectory
+		}`,
+	);
 	await exec('ls', { cwd: process.cwd() + distDirectory });
-	const result = await exec('pkg-size --json', { cwd: process.cwd() + distDirectory }).catch((error) => {
+	const result = await exec('pkg-size --json', {
+		cwd: process.cwd() + distDirectory,
+	}).catch((error) => {
 		throw new Error(`Failed to determine package size: ${error.message}`);
 	});
 	log.info(JSON.stringify(result, null, 4));
@@ -98,19 +114,22 @@ async function buildRef({
 		sizeBrotli: 0,
 	};
 
-	await Promise.all(pkgData.files.map(async (file) => {
-		pkgData.size += file.size;
-		pkgData.sizeGzip += file.sizeGzip;
-		pkgData.sizeBrotli += file.sizeBrotli;
+	await Promise.all(
+		pkgData.files.map(async (file) => {
+			pkgData.size += file.size;
+			pkgData.sizeGzip += file.sizeGzip;
+			pkgData.sizeBrotli += file.sizeBrotli;
 
-		const isTracked = await isFileTracked(file.path);
-		file.isTracked = isTracked;
-		file.label = (
-			isTracked
-				? link(c(file.path), `${refData.repo.html_url}/blob/${refData.ref}/${file.path}`)
-				: c(file.path)
-		);
-	}));
+			const isTracked = await isFileTracked(file.path);
+			file.isTracked = isTracked;
+			file.label = isTracked
+				? link(
+					c(file.path),
+						`${refData.repo.html_url}/blob/${refData.ref}/${file.path}`,
+				)
+				: c(file.path);
+		}),
+	);
 
 	log.info('Cleaning up');
 	await exec('git reset --hard'); // Reverts changed files
