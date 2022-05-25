@@ -2693,7 +2693,8 @@ and stderr: ${stderr}`);
     await exec_default("npm i -g pkg-size", { cwd: process.cwd() + distDirectory });
     pkgSizeInstalled = true;
   }
-  import_core.info("Getting package size");
+  import_core.info(`Getting package size running pkg-size --json in ${process.cwd() + distDirectory}`);
+  await exec_default("ls", { cwd: process.cwd() + distDirectory });
   const result = await exec_default("pkg-size --json", { cwd: process.cwd() + distDirectory }).catch((error) => {
     throw new Error(`Failed to determine package size: ${error.message}`);
   });

@@ -83,7 +83,8 @@ async function buildRef({
 		pkgSizeInstalled = true;
 	}
 
-	log.info('Getting package size');
+	log.info(`Getting package size running pkg-size --json in ${process.cwd() + distDirectory}`);
+	await exec('ls', { cwd: process.cwd() + distDirectory });
 	const result = await exec('pkg-size --json', { cwd: process.cwd() + distDirectory }).catch((error) => {
 		throw new Error(`Failed to determine package size: ${error.message}`);
 	});
