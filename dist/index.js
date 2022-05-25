@@ -10545,7 +10545,7 @@ and stderr: ${stderr}`);
   const result = await exec_default("pkg-size --json", { cwd: process.cwd() + distDirectory }).catch((error) => {
     throw new Error(`Failed to determine package size: ${error.message}`);
   });
-  import_core.debug(JSON.stringify(result, null, 4));
+  import_core.info(JSON.stringify(result, null, 4));
   const pkgData = __spreadProps(__spreadValues({}, JSON.parse(result.stdout)), {
     ref: refData,
     size: 0,

@@ -88,7 +88,7 @@ async function buildRef({
 	const result = await exec('pkg-size --json', { cwd: process.cwd() + distDirectory }).catch((error) => {
 		throw new Error(`Failed to determine package size: ${error.message}`);
 	});
-	log.debug(JSON.stringify(result, null, 4));
+	log.info(JSON.stringify(result, null, 4));
 
 	const pkgData = {
 		...JSON.parse(result.stdout),
