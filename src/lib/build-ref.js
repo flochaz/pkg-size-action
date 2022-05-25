@@ -61,6 +61,7 @@ async function buildRef({
 			const commandsToRun = buildCommand.replace(/&& \\\n/m, '&& ').split('\n');
 			const commandArrayLength = commandsToRun.length;
 			for (let index = 0; index < commandArrayLength; index += 1) {
+				log.info(`Running command ${commandsToRun[index]}`);
 				const {
 					exitCode,
 					duration,
