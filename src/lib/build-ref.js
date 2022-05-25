@@ -66,7 +66,8 @@ async function buildRef({
 				const {
 					exitCode, duration, stdout, stderr,
 				} = await exec(
-					'bash', ['-c', commandsToRun[index]], { cwd },
+					commandsToRun[index],
+					{ cwd },
 				).catch((error) => {
 					throw new Error(
 						`Failed to run build command: ${buildCommand}\n\t\t Error:\n${error}\n#####`,
