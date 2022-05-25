@@ -58,16 +58,20 @@ async function buildRef({
 
 			log.info(`Running build command: ${buildCommand}`);
 			const buildStart = Date.now();
-			const {
-				exitCode,
-				duration,
-				stdout,
-				stderr,
-			} = await exec(buildCommand, { cwd }).catch((error) => {
-				throw new Error(`Failed to run build command: ${buildCommand}\n\t\t Error:\n${error}\n#####`);
-			});
-			log.info(`Build command finished in ${duration}ms with exit code ${exitCode} and output:\n${stdout} \n\nand stderr: ${stderr}`);
-			log.info(`Build completed in ${(Date.now() - buildStart) / 1000}s`);
+			const commandsToRun = buildCommand.replace(/&& \\\n/m, '&& ').split('\n');
+			const commandArrayLength = commandsToRun.length;
+			for (let index = 0; index < commandArrayLength; index += 1) {
+				const {
+					exitCode,
+					duration,
+					stdout,
+					stderr,
+				} = await exec('bash', ['-c', commandsToRun[index]], { cwd }).catch((error) => {
+					throw new Error(`Failed to run build command: ${buildCommand}\n\t\t Error:\n${error}\n#####`);
+				});
+				log.info(`Build command finished in ${duration}ms with exit code ${exitCode} and output:\n${stdout} \n\nand stderr: ${stderr}`);
+				log.info(`Build completed in ${(Date.now() - buildStart) / 1000}s`);
+			}
 		}
 	}
 

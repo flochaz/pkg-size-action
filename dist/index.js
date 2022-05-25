@@ -10511,22 +10511,26 @@ ${error.message}`);
       }
       import_core.info(`Running build command: ${buildCommand}`);
       const buildStart = Date.now();
-      const {
-        exitCode,
-        duration,
-        stdout,
-        stderr
-      } = await exec_default(buildCommand, { cwd }).catch((error) => {
-        throw new Error(`Failed to run build command: ${buildCommand}
+      const commandsToRun = buildCommand.replace(/&& \\\n/m, "&& ").split("\n");
+      const commandArrayLength = commandsToRun.length;
+      for (let index = 0; index < commandArrayLength; index += 1) {
+        const {
+          exitCode,
+          duration,
+          stdout,
+          stderr
+        } = await exec_default("bash", ["-c", commandsToRun[index]], { cwd }).catch((error) => {
+          throw new Error(`Failed to run build command: ${buildCommand}
 		 Error:
 ${error}
 #####`);
-      });
-      import_core.info(`Build command finished in ${duration}ms with exit code ${exitCode} and output:
+        });
+        import_core.info(`Build command finished in ${duration}ms with exit code ${exitCode} and output:
 ${stdout} 
 
 and stderr: ${stderr}`);
-      import_core.info(`Build completed in ${(Date.now() - buildStart) / 1e3}s`);
+        import_core.info(`Build completed in ${(Date.now() - buildStart) / 1e3}s`);
+      }
     }
   }
   if (!pkgSizeInstalled) {
