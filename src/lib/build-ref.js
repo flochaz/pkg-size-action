@@ -68,7 +68,7 @@ async function buildRef({
 					duration,
 					stdout,
 					stderr,
-				} = await exec('bash', ['-c', commandsToRun[index]], { cwd }).catch((error) => {
+				} = await exec(commandsToRun[index], { cwd }).catch((error) => {
 					throw new Error(`Failed to run build command: ${buildCommand}\n\t\t Error:\n${error}\n#####`);
 				});
 				log.info(`Build command finished in ${duration}ms with exit code ${exitCode} and output:\n${stdout} \n\nand stderr: ${stderr}`);
