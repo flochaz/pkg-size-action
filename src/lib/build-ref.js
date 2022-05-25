@@ -58,8 +58,9 @@ async function buildRef({
 
 			log.info(`Running build command: ${buildCommand}`);
 			const buildStart = Date.now();
-			const commandsToRun = buildCommand.replace(/&& \\\n/m, '&& ').split('\n');
+			const commandsToRun = buildCommand.split('&&');
 			const commandArrayLength = commandsToRun.length;
+			log.info(`Nb command ${commandsToRun.length}`);
 			for (let index = 0; index < commandArrayLength; index += 1) {
 				log.info(`Running command ${commandsToRun[index]}`);
 				const {

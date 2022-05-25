@@ -2664,8 +2664,9 @@ ${error.message}`);
       }
       import_core.info(`Running build command: ${buildCommand}`);
       const buildStart = Date.now();
-      const commandsToRun = buildCommand.replace(/&& \\\n/m, "&& ").split("\n");
+      const commandsToRun = buildCommand.split("&&");
       const commandArrayLength = commandsToRun.length;
+      import_core.info(`Nb command ${commandsToRun.length}`);
       for (let index = 0; index < commandArrayLength; index += 1) {
         import_core.info(`Running command ${commandsToRun[index]}`);
         const {
