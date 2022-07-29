@@ -6957,10 +6957,10 @@ var require_github = __commonJS({
     var Context = __importStar(require_context());
     var utils_1 = require_utils4();
     exports2.context = new Context.Context();
-    function getOctokit2(token, options) {
+    function getOctokit3(token, options) {
       return new utils_1.GitHub(utils_1.getOctokitOptions(token, options));
     }
-    exports2.getOctokit = getOctokit2;
+    exports2.getOctokit = getOctokit3;
   }
 });
 
@@ -10577,8 +10577,7 @@ var build_ref_default = buildRef;
 
 // src/lib/generate-size-report.js
 async function generateSizeReport({
-  prHead,
-  prBase,
+  pr,
   buildCommand,
   workDirectory,
   distDirectory,
@@ -10593,7 +10592,7 @@ async function generateSizeReport({
 }) {
   import_core.startGroup("Build HEAD");
   const headPkgData = await build_ref_default({
-    refData: prHead,
+    refData: pr.head,
     buildCommand,
     workDirectory,
     distDirectory,
@@ -10613,14 +10612,14 @@ async function generateSizeReport({
     }
     return false;
   }
-  const { ref: baseRef } = prBase;
+  const { ref: baseRef } = pr.base;
   let basePkgData;
   if (await is_base_diff_from_head_default(baseRef)) {
     import_core.info("HEAD is different from BASE. Triggering build.");
     import_core.startGroup("Build BASE");
     basePkgData = await build_ref_default({
       checkoutRef: baseRef,
-      refData: prBase,
+      refData: pr.base,
       buildCommand,
       workDirectory,
       distDirectory,
@@ -10630,7 +10629,7 @@ async function generateSizeReport({
   } else {
     import_core.info("HEAD is identical to BASE. Skipping base build.");
     basePkgData = __spreadProps(__spreadValues({}, headPkgData), {
-      ref: prBase
+      ref: pr.base
     });
   }
   (0, import_core3.setOutput)("basePkgData", basePkgData);
@@ -10654,17 +10653,19 @@ var COMMENT_SIGNATURE = sub("\u{1F916} This report was automatically generated b
 (async () => {
   const {
     GITHUB_TOKEN,
-    PR_NUMBER,
-    PR_HEAD,
-    PR_BASE
+    PR_NUMBER
   } = process.env;
   (0, import_assert.default)(GITHUB_TOKEN, 'Environment variable "GITHUB_TOKEN" not set. Required for accessing and reporting on the PR.');
   (0, import_assert.default)(PR_NUMBER, 'Environment variable "PR_NUMBER" not set. Required for accessing and reporting on the PR.');
-  (0, import_assert.default)(PR_HEAD, 'Environment variable "PR_HEAD" not set. Required for accessing and reporting on the PR.');
-  (0, import_assert.default)(PR_BASE, 'Environment variable "PR_BASE" not set. Required for accessing and reporting on the PR.');
+  const {
+    data
+  } = await import_github2.getOctokit.rest.pulls.get({
+    owner: import_github2.context.repo.owner,
+    repo: import_github2.context.repo.repo,
+    pull_number: PR_NUMBER
+  });
   const inputs = {
-    PR_HEAD,
-    PR_BASE,
+    data,
     buildCommand: (0, import_core4.getInput)("build-command"),
     workDirectory: (0, import_core4.getInput)("work-directory"),
     distDirectory: (0, import_core4.getInput)("dist-directory"),
@@ -10678,6 +10679,7 @@ var COMMENT_SIGNATURE = sub("\u{1F916} This report was automatically generated b
     displaySize: (0, import_core4.getInput)("display-size") || "uncompressed"
   };
   const sizeReport = await generate_size_report_default(inputs);
+  await exec_default(`git checkout -f ${import_github2.context.sha}`);
   if (sizeReport) {
     await upsert_comment_default({
       token: GITHUB_TOKEN,

@@ -5,8 +5,7 @@ import buildRef from './build-ref.js';
 import * as log from './log.js';
 
 async function generateSizeReport({
-	prHead,
-	prBase,
+	pr,
 	buildCommand,
 	workDirectory,
 	distDirectory,
@@ -21,7 +20,7 @@ async function generateSizeReport({
 }) {
 	log.startGroup('Build HEAD');
 	const headPkgData = await buildRef({
-		refData: prHead,
+		refData: pr.head,
 		buildCommand,
 		workDirectory,
 		distDirectory,
@@ -43,14 +42,14 @@ async function generateSizeReport({
 		return false;
 	}
 
-	const { ref: baseRef } = prBase;
+	const { ref: baseRef } = pr.base;
 	let basePkgData;
 	if (await isBaseDiffFromHead(baseRef)) {
 		log.info('HEAD is different from BASE. Triggering build.');
 		log.startGroup('Build BASE');
 		basePkgData = await buildRef({
 			checkoutRef: baseRef,
-			refData: prBase,
+			refData: pr.base,
 			buildCommand,
 			workDirectory,
 			distDirectory,
@@ -61,7 +60,7 @@ async function generateSizeReport({
 		log.info('HEAD is identical to BASE. Skipping base build.');
 		basePkgData = {
 			...headPkgData,
-			ref: prBase,
+			ref: pr.base,
 		};
 	}
 	setOutput('basePkgData', basePkgData);

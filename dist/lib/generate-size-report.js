@@ -5061,8 +5061,7 @@ var build_ref_default = buildRef;
 
 // src/lib/generate-size-report.js
 async function generateSizeReport({
-  prHead,
-  prBase,
+  pr,
   buildCommand,
   workDirectory,
   distDirectory,
@@ -5077,7 +5076,7 @@ async function generateSizeReport({
 }) {
   import_core2.startGroup("Build HEAD");
   const headPkgData = await build_ref_default({
-    refData: prHead,
+    refData: pr.head,
     buildCommand,
     workDirectory,
     distDirectory,
@@ -5097,14 +5096,14 @@ async function generateSizeReport({
     }
     return false;
   }
-  const { ref: baseRef } = prBase;
+  const { ref: baseRef } = pr.base;
   let basePkgData;
   if (await is_base_diff_from_head_default(baseRef)) {
     import_core2.info("HEAD is different from BASE. Triggering build.");
     import_core2.startGroup("Build BASE");
     basePkgData = await build_ref_default({
       checkoutRef: baseRef,
-      refData: prBase,
+      refData: pr.base,
       buildCommand,
       workDirectory,
       distDirectory,
@@ -5114,7 +5113,7 @@ async function generateSizeReport({
   } else {
     import_core2.info("HEAD is identical to BASE. Skipping base build.");
     basePkgData = __spreadProps(__spreadValues({}, headPkgData), {
-      ref: prBase
+      ref: pr.base
     });
   }
   (0, import_core3.setOutput)("basePkgData", basePkgData);
