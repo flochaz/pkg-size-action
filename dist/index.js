@@ -10659,7 +10659,7 @@ var COMMENT_SIGNATURE = sub("\u{1F916} This report was automatically generated b
   (0, import_assert.default)(PR_NUMBER, 'Environment variable "PR_NUMBER" not set. Required for accessing and reporting on the PR.');
   const {
     data
-  } = await import_github2.getOctokit.rest.pulls.get({
+  } = await import_github2.getOctokit.pulls.get({
     owner: import_github2.context.repo.owner,
     repo: import_github2.context.repo.repo,
     pull_number: PR_NUMBER
