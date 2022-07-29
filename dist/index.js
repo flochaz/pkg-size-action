@@ -10683,7 +10683,8 @@ var COMMENT_SIGNATURE = sub("\u{1F916} This report was automatically generated b
   const pr = await get_pr_object_default({
     token: GITHUB_TOKEN,
     owner: import_github3.context.repo.owner,
-    repo: import_github3.context.repo.repo
+    repo: import_github3.context.repo.repo,
+    prNumber: PR_NUMBER
   });
   const inputs = {
     pr,
