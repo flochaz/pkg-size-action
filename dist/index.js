@@ -10677,13 +10677,19 @@ var COMMENT_SIGNATURE = sub("\u{1F916} This report was automatically generated b
   const { GITHUB_TOKEN } = process.env;
   (0, import_assert.default)(GITHUB_TOKEN, 'Environment variable "GITHUB_TOKEN" not set. Required for accessing and reporting on the PR.');
   const prNumber = (0, import_core4.getInput)("pr-number");
-  (0, import_assert.default)(prNumber, 'Input "pr-number" not set. Required for accessing and reporting on the PR.');
-  const pr = await get_pr_object_default({
-    token: GITHUB_TOKEN,
-    owner: import_github3.context.repo.owner,
-    repo: import_github3.context.repo.repo,
-    prNumber
-  });
+  let pr;
+  if (prNumber) {
+    pr = await get_pr_object_default({
+      token: GITHUB_TOKEN,
+      owner: import_github3.context.repo.owner,
+      repo: import_github3.context.repo.repo,
+      prNumber
+    });
+  } else {
+    const { pull_request: pullRequest } = import_github3.context.payload;
+    pr = pullRequest;
+  }
+  (0, import_assert.default)(pr, 'Input "pr" undefined set. Required for accessing and reporting on the PR.');
   const inputs = {
     pr,
     buildCommand: (0, import_core4.getInput)("build-command"),
