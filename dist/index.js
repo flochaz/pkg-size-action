@@ -10656,14 +10656,12 @@ var COMMENT_SIGNATURE = sub("\u{1F916} This report was automatically generated b
     GITHUB_TOKEN,
     PR_NUMBER,
     PR_HEAD,
-    PR_BASE,
-    SHA
+    PR_BASE
   } = process.env;
   (0, import_assert.default)(GITHUB_TOKEN, 'Environment variable "GITHUB_TOKEN" not set. Required for accessing and reporting on the PR.');
   (0, import_assert.default)(PR_NUMBER, 'Environment variable "PR_NUMBER" not set. Required for accessing and reporting on the PR.');
   (0, import_assert.default)(PR_HEAD, 'Environment variable "PR_HEAD" not set. Required for accessing and reporting on the PR.');
   (0, import_assert.default)(PR_BASE, 'Environment variable "PR_BASE" not set. Required for accessing and reporting on the PR.');
-  (0, import_assert.default)(SHA, 'Environment variable "SHA" not set. Required for accessing and reporting on the PR.');
   const inputs = {
     PR_HEAD,
     PR_BASE,
@@ -10680,7 +10678,6 @@ var COMMENT_SIGNATURE = sub("\u{1F916} This report was automatically generated b
     displaySize: (0, import_core4.getInput)("display-size") || "uncompressed"
   };
   const sizeReport = await generate_size_report_default(inputs);
-  await exec_default(`git checkout -f ${SHA}`);
   if (sizeReport) {
     await upsert_comment_default({
       token: GITHUB_TOKEN,
