@@ -12,17 +12,24 @@ async function getPrObject({
 	const octokit = getOctokit(token);
 
 	log.info('Getting PR object');
-	const {
-		data,
-	} = await octokit.pulls.get({
-		owner,
-		repo,
-		pull_number: prNumber,
-	});
+	try {
+		const {
+			data,
+		} = await octokit.pulls.get({
+			owner,
+			repo,
+			pull_number: prNumber,
+		});
 
-	log.endGroup();
+		log.endGroup();
 
-	return data;
+		return data;
+	} catch (error) {
+		log.error(error);
+		log.endGroup();
+
+		throw error;
+	}
 }
 
 export default getPrObject;

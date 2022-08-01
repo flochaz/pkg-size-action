@@ -1,7 +1,7 @@
 {
 	"name": "pkg-size-action",
 	"version": "0.0.0-semantic-release",
-	"description": "Check package size changes on pull-requests",
+	"description": "Report npm package size for all AWS Lambda Powertools utils on PRs",
 	"keywords": [
 		"github",
 		"action",
@@ -13,16 +13,15 @@
 	],
 	"license": "MIT",
 	"repository": "pkg-size/action",
-	"funding": "https://github.com/pkg-size/action?sponsor=1",
 	"author": {
-		"name": "Hiroki Osame",
-		"email": "hiroki.osame@gmail.com"
+		"name": "AWS Lambda Powertools for TypeScript Team",
+		"email": "aws-lambda-powertools-typescript@amazon.com"
 	},
 	"files": [
 		"dist"
 	],
 	"scripts": {
-		"build": "rm dist/index.js && npx esbuild --bundle 'src/index.js' --target=node14 --platform=node --outdir='dist'",
+		"build": "rm dist/index.js && npx esbuild --bundle 'src/index.js' --target=node16 --platform=node --outdir='dist'",
 		"lint": "eslint ."
 	},
 	"husky": {

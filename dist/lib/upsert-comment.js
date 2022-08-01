@@ -6969,42 +6969,36 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
   }
 });
 
-// src/lib/get-pr-object.js
+// src/lib/upsert-comment.js
 __export(exports, {
-  default: () => get_pr_object_default
+  default: () => upsert_comment_default
 });
 var import_github = __toModule(require_github());
 
 // src/lib/log.js
 var import_core = __toModule(require_core());
 
-// src/lib/get-pr-object.js
-async function getPrObject({
+// src/lib/upsert-comment.js
+async function upsertComment({
   token,
-  owner,
+  commentSignature,
   repo,
-  prNumber
+  prNumber,
+  body
 }) {
-  import_core.startGroup("Get PR object");
+  import_core.startGroup("Comment on PR");
+  body += `
+
+${commentSignature}`;
   const octokit = (0, import_github.getOctokit)(token);
-  import_core.info("Getting PR object");
-  try {
-    const {
-      data
-    } = await octokit.pulls.get({
-      owner,
-      repo,
-      pull_number: prNumber
-    });
-    import_core.endGroup();
-    return data;
-  } catch (error2) {
-    import_core.error(error2);
-    import_core.endGroup();
-    throw error2;
-  }
+  import_core.info("Posting new comment");
+  await octokit.issues.createComment(__spreadProps(__spreadValues({}, repo), {
+    issue_number: prNumber,
+    body
+  }));
+  import_core.endGroup();
 }
-var get_pr_object_default = getPrObject;
+var upsert_comment_default = upsertComment;
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {});
 /*!
