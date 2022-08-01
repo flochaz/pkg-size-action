@@ -10697,12 +10697,7 @@ var COMMENT_SIGNATURE = sub("\u{1F916} This report was automatically generated b
   await exec_default(`git checkout -f ${import_github3.context.sha}`);
   if (sizeReport) {
     import_core.startGroup("Adding summary & comment");
-    await import_core4.summary.addHeading("Test Results").addTable([
-      [{ data: "File", header: true }, { data: "Result", header: true }],
-      ["foo.js", "Pass "],
-      ["bar.js", "Fail "],
-      ["test.js", "Pass "]
-    ]).addLink("View staging deployment!", "https://github.com").write();
+    await import_core4.summary.addRaw(sizeReport).write();
     import_core.info("summary added");
     try {
       await upsert_comment_default({
