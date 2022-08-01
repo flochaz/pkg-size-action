@@ -10696,7 +10696,14 @@ var COMMENT_SIGNATURE = sub("\u{1F916} This report was automatically generated b
   const sizeReport = await generate_size_report_default(inputs);
   await exec_default(`git checkout -f ${import_github3.context.sha}`);
   if (sizeReport) {
-    await import_core4.summary.addRaw(sizeReport).write();
+    import_core.startGroup("Adding summary & comment");
+    await import_core4.summary.addHeading("Test Results").addTable([
+      [{ data: "File", header: true }, { data: "Result", header: true }],
+      ["foo.js", "Pass "],
+      ["bar.js", "Fail "],
+      ["test.js", "Pass "]
+    ]).addLink("View staging deployment!", "https://github.com").write();
+    import_core.info("summary added");
     try {
       await upsert_comment_default({
         token: GITHUB_TOKEN,
@@ -10706,9 +10713,12 @@ var COMMENT_SIGNATURE = sub("\u{1F916} This report was automatically generated b
         prNumber,
         body: sizeReport
       });
+      import_core.info("Comment added");
     } catch (error2) {
       import_core.error(error2);
       import_core.error("Failed to update comment. Please check the error above & use summary instead.");
+    } finally {
+      import_core.endGroup();
     }
   }
 })().catch((error2) => {
