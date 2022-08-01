@@ -10696,14 +10696,20 @@ var COMMENT_SIGNATURE = sub("\u{1F916} This report was automatically generated b
   const sizeReport = await generate_size_report_default(inputs);
   await exec_default(`git checkout -f ${import_github3.context.sha}`);
   if (sizeReport) {
-    await upsert_comment_default({
-      token: GITHUB_TOKEN,
-      commentSignature: `${COMMENT_SIGNATURE} 
+    try {
+      await upsert_comment_default({
+        token: GITHUB_TOKEN,
+        commentSignature: `${COMMENT_SIGNATURE} 
  (options hash: ${import_crypto.default.createHash("md5").update(JSON.stringify(inputs)).digest("hex")})`,
-      repo: import_github3.context.repo,
-      prNumber,
-      body: sizeReport
-    });
+        repo: import_github3.context.repo,
+        prNumber,
+        body: sizeReport
+      });
+    } catch (error2) {
+      import_core.error(error2);
+      import_core.info("Failed to write comment, falling back to summary.");
+      await import_core4.summary.addRaw(sizeReport).write();
+    }
   }
 })().catch((error2) => {
   (0, import_core4.setFailed)(error2.message);
