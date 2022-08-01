@@ -27,6 +27,9 @@ inputs:
     description: 'Sort order: desc, asc'
   hide-files:
     description: 'Glob pattern to hide files with'
+  pr-number:
+    description: 'Number of the PR to work with'
+    required: true
 runs:
   using: 'node12'
   main: 'dist/index.js'
