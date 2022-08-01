@@ -10598,6 +10598,10 @@ async function generateSizeReport({
   displaySize
 }) {
   import_core.startGroup("Build HEAD");
+  import_core.info(`HEAD ref: ${pr.head.ref}`);
+  import_core.info(`HEAD repo name: ${pr.head.repo.full_name}`);
+  import_core.info(`BASE ref: ${pr.base.ref}`);
+  import_core.info(`BASE repo name: ${pr.base.repo.full_name}`);
   const headPkgData = await build_ref_default({
     refData: pr.head,
     buildCommand,
@@ -10660,7 +10664,7 @@ var COMMENT_SIGNATURE = sub("\u{1F916} This report was automatically generated b
 (async () => {
   const { GITHUB_TOKEN } = process.env;
   (0, import_assert.default)(GITHUB_TOKEN, 'Environment variable "GITHUB_TOKEN" not set. Required for accessing and reporting on the PR.');
-  const prNumber = (0, import_core4.getInput)("pr-number");
+  let prNumber = (0, import_core4.getInput)("pr-number");
   let pr;
   if (prNumber) {
     pr = await get_pr_object_default({
@@ -10672,6 +10676,7 @@ var COMMENT_SIGNATURE = sub("\u{1F916} This report was automatically generated b
   } else {
     const { pull_request: pullRequest } = import_github3.context.payload;
     pr = pullRequest;
+    prNumber = pr.number;
   }
   (0, import_assert.default)(pr, 'Input "pr" undefined set. Required for accessing and reporting on the PR.');
   const inputs = {

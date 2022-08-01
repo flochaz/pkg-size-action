@@ -19,6 +19,11 @@ async function generateSizeReport({
 	displaySize,
 }) {
 	log.startGroup('Build HEAD');
+	log.info(`HEAD ref: ${pr.head.ref}`);
+	log.info(`HEAD repo name: ${pr.head.repo.full_name}`);
+
+	log.info(`BASE ref: ${pr.base.ref}`);
+	log.info(`BASE repo name: ${pr.base.repo.full_name}`);
 	const headPkgData = await buildRef({
 		refData: pr.head,
 		buildCommand,
