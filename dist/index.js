@@ -10696,6 +10696,7 @@ var COMMENT_SIGNATURE = sub("\u{1F916} This report was automatically generated b
   const sizeReport = await generate_size_report_default(inputs);
   await exec_default(`git checkout -f ${import_github3.context.sha}`);
   if (sizeReport) {
+    await import_core4.summary.addRaw(sizeReport).write();
     try {
       await upsert_comment_default({
         token: GITHUB_TOKEN,
@@ -10707,8 +10708,7 @@ var COMMENT_SIGNATURE = sub("\u{1F916} This report was automatically generated b
       });
     } catch (error2) {
       import_core.error(error2);
-      import_core.info("Failed to write comment, falling back to summary.");
-      await import_core4.summary.addRaw(sizeReport).write();
+      import_core.error("Failed to update comment. Please check the error above & use summary instead.");
     }
   }
 })().catch((error2) => {
