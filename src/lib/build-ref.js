@@ -21,17 +21,8 @@ async function buildRef({
 	log.info(`Current working directory: ${cwd}`);
 
 	if (checkoutRef) {
-		// const temporaryDir = await createTempDirectory();
 		log.info(`Checking out ref '${checkoutRef}'`);
 		await exec(`git checkout -f ${checkoutRef}`);
-		/*
-		 * For parallel builds
-		 * Since this doesn't make it a git repo, installing some deps like husky fails
-		 */
-		// await exec(`git --work-tree="${temporaryDir}" checkout -f origin/${ref} -- .`);
-
-		// cwd = temporaryDir;
-		// log.info('Changed working directory', cwd);
 	}
 
 	if (buildCommand !== 'false') {

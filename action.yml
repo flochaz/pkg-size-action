@@ -1,35 +1,46 @@
 name: 'pkg-size'
-description: 'Report npm package size on pull-requests'
-author: 'Hiroki Osame <hiroki.osame@gmail.com>'
+description: 'Report npm package size for all AWS Lambda Powertools utils on PRs'
+author: 'AWS Lambda Powertools for TypeScript Team <aws-lambda-powertools-typescript@amazon.com'
 branding:
-  icon: 'git-pull-request'
-  color: 'blue'
+  icon: 'trending-up'
+  color: 'white'
 inputs:
   build-command:
     description: 'Command to build the package with'
+    required: true
   work-directory: 
-    description: where the build should run  
+    description: where the build should run
+    required: false
   dist-directory:
     description: where the dist folder is
+    required: true
   skip-npm-ci:
     description: 'Skip npm ci'
+    required: false
   comment-report:
     description: 'Whether to comment the build size report on the PR or not: true, false'
+    required: false
   mode:
     description: 'Report mode: regression (default), head-only'
+    required: false
   display-size:
     description: 'What size to display. Comma delimited list for multiple: uncompressed (default), gzip, brotli:'
+    required: false
   unchanged-files:
     description: 'Whether to show unchanged files: show, collapse, hide'
+    required: false
   sort-by:
     description: 'Which property to sort by: delta (size difference), headSize, baseSize, path'
+    required: false
   sort-order:
     description: 'Sort order: desc, asc'
+    required: false
   hide-files:
     description: 'Glob pattern to hide files with'
+    required: false
   pr-number:
     description: 'Number of the PR to work with'
     required: true
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'

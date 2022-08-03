@@ -1,6 +1,7 @@
 export {
 	info,
 	warning,
+	error,
 	debug,
 	startGroup,
 	endGroup,
